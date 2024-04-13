@@ -295,7 +295,7 @@ struct RepoStatus {
 impl RepoStatus {
     fn is_deleted(short_status: &str) -> bool {
         // is_wt_deleted || is_index_deleted
-        short_status.contains('D')
+        short_status.ends_with('D')
     }
 
     fn is_modified(short_status: &str) -> bool {
