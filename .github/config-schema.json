@@ -655,6 +655,7 @@
         "modified": "!",
         "renamed": "»",
         "staged": "+",
+        "unstaged": "*",
         "stashed": "\\$",
         "style": "red bold",
         "typechanged": "",
@@ -3549,6 +3550,10 @@
         },
         "staged": {
           "default": "+",
+          "type": "string"
+        },
+        "unstaged": {
+          "default": "*",
           "type": "string"
         },
         "untracked": {

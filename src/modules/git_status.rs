@@ -25,6 +25,7 @@ const ALL_STATUS_FORMAT: &str =
 ///   - `$` — A stash exists for the local repository
 ///   - `!` — There are file modifications in the working directory
 ///   - `+` — A new file has been added to the staging area
+///   - `*` — There are unstaged files in the repository
 ///   - `»` — A renamed file has been added to the staging area
 ///   - `✘` — A file's deletion has been added to the staging area
 pub fn module<'a>(context: &'a Context) -> Option<Module<'a>> {
@@ -100,6 +101,9 @@ pub fn module<'a>(context: &'a Context) -> Option<Module<'a>> {
                     }),
                     "staged" => info.get_staged().and_then(|count| {
                         format_count(config.staged, "git_status.staged", context, count)
+                    }),
+                    "unstaged" => info.get_unstaged().and_then(|count| {
+                        format_count(config.unstaged, "git_status.unstaged", context, count)
                     }),
                     "untracked" => info.get_untracked().and_then(|count| {
                         format_count(config.untracked, "git_status.untracked", context, count)
@@ -199,6 +203,12 @@ impl<'a> GitStatusInfo<'a> {
 
     pub fn get_staged(&self) -> Option<usize> {
         self.get_repo_status().map(|data| data.staged)
+    }
+
+    pub fn get_unstaged(&self) -> Option<usize> {
+        Some(
+            self.get_deleted().unwrap_or(0) + self.get_modified().unwrap_or(0) + self.get_untracked().unwrap_or(0) + self.get_typechanged().unwrap_or(0)
+        )
     }
 
     pub fn get_untracked(&self) -> Option<usize> {
