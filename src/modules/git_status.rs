@@ -207,7 +207,9 @@ impl<'a> GitStatusInfo<'a> {
 
     pub fn get_unstaged(&self) -> Option<usize> {
         Some(
-            self.get_deleted().unwrap_or(0) + self.get_modified().unwrap_or(0) + self.get_untracked().unwrap_or(0) + self.get_typechanged().unwrap_or(0)
+            self.get_deleted().unwrap_or(0) + 
+            self.get_modified().unwrap_or(0) + 
+            self.get_typechanged().unwrap_or(0)
         )
     }
 
@@ -304,7 +306,7 @@ struct RepoStatus {
 
 impl RepoStatus {
     fn is_deleted(short_status: &str) -> bool {
-        // is_wt_deleted || is_index_deleted
+        // is_wt_deleted
         short_status.ends_with('D')
     }
 
@@ -314,10 +316,12 @@ impl RepoStatus {
     }
 
     fn is_staged(short_status: &str) -> bool {
-        // is_index_modified || is_index_added || is_index_typechanged
+        // is_index_modified || is_index_added || is_index_deleted || is_index_typechanged || is_index_renamed
         short_status.starts_with('M')
             || short_status.starts_with('A')
+            || short_status.starts_with('D')
             || short_status.starts_with('T')
+            || short_status.starts_with('R')
     }
 
     fn is_typechanged(short_status: &str) -> bool {
